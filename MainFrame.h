@@ -8,6 +8,9 @@ class CMainFrame : public wxFrame
 {
 private:
     wxXmlDocument m_xmlDocument;
+    
+    void CreateMenuBar();
+    void OnSaveXml(wxCommandEvent& event);
 
 public:
     CMainFrame(wxWindow* parent = nullptr);

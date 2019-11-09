@@ -11,9 +11,10 @@ CMainFrame::CMainFrame(wxWindow* parent)
 
     wxListbook* m_choicebook = new wxListbook(this, NewControlId(), wxDefaultPosition, wxDefaultSize);
 
+    CreateMenuBar();
+
     wxBoxSizer* mainBox = new wxBoxSizer(wxHORIZONTAL);
     mainBox->Add(m_choicebook, 1, wxEXPAND);
-
 
     // load xml file
     bool resLoad = true;
@@ -36,12 +37,20 @@ CMainFrame::CMainFrame(wxWindow* parent)
         }
     }
 
+    this->SetSizerAndFit(mainBox);
+}
 
+CMainFrame::~CMainFrame()
+{
+}
+
+void CMainFrame::OnSaveXml(wxCommandEvent& event)
+{
     // save xml file
-    wxXmlDocument closeXmlDocument;
+    wxXmlDocument xmlDoc;
     wxXmlNode* root = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, ROOTXML);
-    closeXmlDocument.SetRoot(root);
-    for(int page = 0; page < m_choicebook->GetPageCount(); page++) {
+    xmlDoc.SetRoot(root);
+    for(unsigned int page = 0; page < m_choicebook->GetPageCount(); page++) {
         wxWindow* windowPage = m_choicebook->GetPage(page);
         if(windowPage != nullptr) {
             CPanel* panelPage = dynamic_cast<CPanel*>(windowPage);
@@ -53,11 +62,19 @@ CMainFrame::CMainFrame(wxWindow* parent)
             }
         }
     }
-    closeXmlDocument.Save("output.xml");
-
-    this->SetSizerAndFit(mainBox);
+    xmlDoc.Save("output.xml");
 }
 
-CMainFrame::~CMainFrame()
+void CMainFrame::CreateMenuBar()
 {
+    wxMenuBar* menuBar = new wxMenuBar;
+
+    wxMenu* file = new wxMenu;
+    wxMenuItem* save = new wxMenuItem(file, NewControlId(), wxT("Save"));
+    file->Append(save);
+
+    menuBar->Append(file, wxT("File"));
+
+    Bind(wxEVT_COMMAND_MENU_SELECTED, CMainFrame::OnSaveXml, this, save->GetId());
+    SetMenuBar(menuBar);
 }
