@@ -6,6 +6,7 @@
 #include <wx/xml/xml.h>
 
 #define NAMEFILEXML wxT("KeyByAllTheDoor.xml")
+#define ROOTXML wxT("root")
 
 struct TAttributeXml {
     wxString webSite = wxT("WebSite");

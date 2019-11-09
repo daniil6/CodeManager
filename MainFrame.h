@@ -7,7 +7,7 @@
 class CMainFrame : public wxFrame
 {
 private:
-    wxXmlDocument m_doc;
+    wxXmlDocument m_xmlDocument;
 
 public:
     CMainFrame(wxWindow* parent = nullptr);
