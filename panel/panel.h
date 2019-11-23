@@ -1,29 +1,23 @@
 #ifndef CPANEL_H
 #define CPANEL_H
 
-#include "wx/wx.h"
 #include <wx/listctrl.h>
 #include <wx/xml/xml.h>
+#include "base_panel.h"
 
 #define NAMEFILEXML wxT("KeyByAllTheDoor.xml")
 #define ROOTXML wxT("root")
 
-struct TAttributeXml {
-    wxString webSite = wxT("WebSite");
-    wxString login = wxT("Login");
-    wxString password = wxT("Password");
-};
-
-class CPanel : public wxPanel
+class CPanel : public CBasePanel
 {
 private:
-    TAttributeXml attribute;
+
 
     wxString m_namePanel;
     wxXmlDocument m_doc;
     wxListCtrl* m_listCtrl;
 
-    void SetValue(const wxArrayString& arrayString);
+    virtual void SetValue(const wxArrayString& arrayString) final;
     wxArrayString GetValue();
 
 public:

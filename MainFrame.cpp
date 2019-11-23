@@ -1,5 +1,4 @@
 #include "MainFrame.h"
-#include <wx/listbook.h>
 
 #define WIDTH 500
 #define HEIGHT 500
@@ -9,7 +8,7 @@ CMainFrame::CMainFrame(wxWindow* parent)
 {
     SetIcon(wxICON(lock));
 
-    wxListbook* m_choicebook = new wxListbook(this, NewControlId(), wxDefaultPosition, wxDefaultSize);
+    m_choicebook = new wxListbook(this, NewControlId(), wxDefaultPosition, wxDefaultSize);
 
     CreateMenuBar();
 
@@ -31,7 +30,7 @@ CMainFrame::CMainFrame(wxWindow* parent)
                 wxString nameMail = mail->GetName();
                 CPanel* panel = new CPanel(m_choicebook, nameMail, m_xmlDocument);
                 m_choicebook->AddPage(panel, nameMail);
-                panel->LoadXmlFileInList(mail->GetChildren());
+                panel->CBasePanel::LoadXmlFileInList(mail->GetChildren());
                 mail = mail->GetNext();
             }
         }
@@ -70,10 +69,18 @@ void CMainFrame::CreateMenuBar()
     wxMenuBar* menuBar = new wxMenuBar;
 
     wxMenu* file = new wxMenu;
+    wxMenu* edit = new wxMenu;
+
     wxMenuItem* save = new wxMenuItem(file, NewControlId(), wxT("Save"));
     file->Append(save);
 
+    wxMenuItem* addNewItem = new wxMenuItem(edit, NewControlId(), wxT("Add new item"));
+    wxMenuItem* deleteItem = new wxMenuItem(edit, NewControlId(), wxT("Delete item"));
+    edit->Append(addNewItem);
+    edit->Append(deleteItem);
+
     menuBar->Append(file, wxT("File"));
+    menuBar->Append(edit, wxT("Edit"));
 
     Bind(wxEVT_COMMAND_MENU_SELECTED, CMainFrame::OnSaveXml, this, save->GetId());
     SetMenuBar(menuBar);

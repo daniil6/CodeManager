@@ -2,7 +2,7 @@
 #include <wx/stdpaths.h>
 
 CPanel::CPanel(wxWindow* window, wxString namePanel, wxXmlDocument& doc)
-    : wxPanel(window, NewControlId())
+    : CBasePanel(window)
     , m_namePanel(namePanel)
     , m_doc(doc)
 {
@@ -31,6 +31,7 @@ bool CPanel::SaveXmlFileFromList(wxXmlNode* mail)
         item.SetColumn(0);
         m_listCtrl->GetItem(item);
         wxXmlNode* node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, item.GetText());
+        wxArrayString arrayString;
 
         for(int col = 1; col < m_listCtrl->GetColumnCount(); col++) {
             item.SetColumn(col);
@@ -40,6 +41,8 @@ bool CPanel::SaveXmlFileFromList(wxXmlNode* mail)
             wxString labelColumm = item.GetText();
 
             node->AddAttribute(labelColumm, itemColumm);
+            arrayString.push_back(labelColumm);
+            arrayString.push_back(itemColumm);
         }
         mail->AddChild(node);
     }
@@ -47,17 +50,7 @@ bool CPanel::SaveXmlFileFromList(wxXmlNode* mail)
     return true;
 }
 
-void CPanel::LoadXmlFileInList(wxXmlNode* node)
-{
-    while(node != nullptr) {
-        wxArrayString arrayString;
-        arrayString.Add(node->GetName());
-        arrayString.Add(node->GetAttribute(attribute.login, wxT("NOT_FOUND")));
-        arrayString.Add(node->GetAttribute(attribute.password, wxT("NOT_FOUND")));
-        SetValue(arrayString);
-        node = node->GetNext();
-    }
-}
+
 
 void CPanel::SetValue(const wxArrayString& arrayString)
 {
