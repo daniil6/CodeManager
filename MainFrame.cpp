@@ -15,26 +15,7 @@ CMainFrame::CMainFrame(wxWindow* parent)
     wxBoxSizer* mainBox = new wxBoxSizer(wxHORIZONTAL);
     mainBox->Add(m_choicebook, 1, wxEXPAND);
 
-    // load xml file
-    bool resLoad = true;
-    if(m_xmlDocument.Load(NAMEFILEXML) == false)
-        resLoad = false;
-    if(resLoad == true) {
-        wxXmlNode* root = m_xmlDocument.GetRoot();
-        if(root->GetName() != "root")
-            resLoad = false;
-
-        if(resLoad == true) {
-            wxXmlNode* mail = root->GetChildren();
-            while(mail != nullptr) {
-                wxString nameMail = mail->GetName();
-                CPanel* panel = new CPanel(m_choicebook, nameMail, m_xmlDocument);
-                m_choicebook->AddPage(panel, nameMail);
-                panel->CBasePanel::LoadXmlFileInList(mail->GetChildren());
-                mail = mail->GetNext();
-            }
-        }
-    }
+    LoadXml();
 
     this->SetSizerAndFit(mainBox);
 }
@@ -43,9 +24,32 @@ CMainFrame::~CMainFrame()
 {
 }
 
+void CMainFrame::LoadXml()
+{
+    wxXmlDocument xmlDoc;
+    bool resLoad = true;
+    if(xmlDoc.Load(NAMEFILEXML) == false)
+        resLoad = false;
+    if(resLoad == true) {
+        wxXmlNode* root = xmlDoc.GetRoot();
+        if(root->GetName() != "root")
+            resLoad = false;
+
+        if(resLoad == true) {
+            wxXmlNode* mail = root->GetChildren();
+            while(mail != nullptr) {
+                wxString nameMail = mail->GetName();
+                CPanel* panel = new CPanel(m_choicebook, nameMail);
+                m_choicebook->AddPage(panel, nameMail);
+                panel->LoadXmlFileInList(mail);
+                mail = mail->GetNext();
+            }
+        }
+    }
+}
+
 void CMainFrame::OnSaveXml(wxCommandEvent& event)
 {
-    // save xml file
     wxXmlDocument xmlDoc;
     wxXmlNode* root = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, ROOTXML);
     xmlDoc.SetRoot(root);
@@ -61,7 +65,8 @@ void CMainFrame::OnSaveXml(wxCommandEvent& event)
             }
         }
     }
-    xmlDoc.Save("output.xml");
+    // xmlDoc.Save("output.xml");
+    xmlDoc.Save(NAMEFILEXML);
 }
 
 void CMainFrame::CreateMenuBar()
@@ -83,5 +88,27 @@ void CMainFrame::CreateMenuBar()
     menuBar->Append(edit, wxT("Edit"));
 
     Bind(wxEVT_COMMAND_MENU_SELECTED, CMainFrame::OnSaveXml, this, save->GetId());
+    Bind(wxEVT_COMMAND_MENU_SELECTED, CMainFrame::OnAddNewItem, this, addNewItem->GetId());
+    Bind(wxEVT_COMMAND_MENU_SELECTED, CMainFrame::OnDeleteItem, this, deleteItem->GetId());
     SetMenuBar(menuBar);
+}
+
+void CMainFrame::OnAddNewItem(wxCommandEvent& event)
+{
+    wxWindow* windowPage = m_choicebook->GetPage(m_choicebook->GetSelection());
+    if(windowPage != nullptr) {
+        CPanel* panelPage = dynamic_cast<CPanel*>(windowPage);
+        if(panelPage != nullptr)
+            panelPage->AddNewItem();
+    }
+}
+
+void CMainFrame::OnDeleteItem(wxCommandEvent& event)
+{
+    wxWindow* windowPage = m_choicebook->GetPage(m_choicebook->GetSelection());
+    if(windowPage != nullptr) {
+        CPanel* panelPage = dynamic_cast<CPanel*>(windowPage);
+        if(panelPage != nullptr)
+            panelPage->DeleteItem();
+    }
 }

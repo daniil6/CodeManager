@@ -1,18 +1,28 @@
 #include "panel.h"
 #include <wx/stdpaths.h>
 
-CPanel::CPanel(wxWindow* window, wxString namePanel, wxXmlDocument& doc)
+CPanel::CPanel(wxWindow* window, wxString namePanel)
     : CBasePanel(window)
     , m_namePanel(namePanel)
-    , m_doc(doc)
 {
-    m_listCtrl = new wxListCtrl(this, NewControlId(), wxDefaultPosition, wxDefaultSize, wxLC_REPORT);
-    m_listCtrl->InsertColumn(0, attribute.webSite);
-    m_listCtrl->InsertColumn(1, attribute.login);
-    m_listCtrl->InsertColumn(2, attribute.password);
+    m_grid = new wxGrid(this, NewControlId());
+    m_grid->CreateGrid(0, 5);
+
+    // Hide labels rows
+    m_grid->SetRowLabelSize(0);
+
+    m_grid->SetColLabelValue(0, m_attribute.webSite);
+    m_grid->SetColLabelValue(1, m_attribute.login);
+    m_grid->SetColLabelValue(2, m_attribute.password);
+    m_grid->SetColLabelValue(3, m_attribute.mail);
+    m_grid->SetColLabelValue(4, m_attribute.web);
+
+    // m_listCtrl = new wxListCtrl(this, NewControlId(), wxDefaultPosition, wxDefaultSize, wxLC_REPORT |
+    // wxLC_EDIT_LABELS);  m_listCtrl->InsertColumn(0, attribute.webSite);  m_listCtrl->InsertColumn(1,
+    // attribute.login); m_listCtrl->InsertColumn(2, attribute.password);
 
     wxBoxSizer* h_box = new wxBoxSizer(wxHORIZONTAL);
-    h_box->Add(m_listCtrl, 1, wxEXPAND);
+    h_box->Add(m_grid, 1, wxEXPAND);
     this->SetSizerAndFit(h_box);
 }
 
@@ -20,7 +30,7 @@ CPanel::~CPanel()
 {
 }
 
-bool CPanel::SaveXmlFileFromList(wxXmlNode* mail)
+void CPanel::GetValue(wxArrayString& arrayString)
 {
     long itemIndex = -1;
     while((itemIndex = m_listCtrl->GetNextItem(itemIndex, wxLIST_NEXT_ALL, wxLIST_STATE_DONTCARE)) != wxNOT_FOUND) {
@@ -28,48 +38,44 @@ bool CPanel::SaveXmlFileFromList(wxXmlNode* mail)
         item.SetId(itemIndex);
         item.SetMask(wxLIST_MASK_TEXT);
 
-        item.SetColumn(0);
-        m_listCtrl->GetItem(item);
-        wxXmlNode* node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, item.GetText());
-        wxArrayString arrayString;
-
-        for(int col = 1; col < m_listCtrl->GetColumnCount(); col++) {
+        for(int col = 0; col < m_listCtrl->GetColumnCount(); col++) {
             item.SetColumn(col);
             m_listCtrl->GetItem(item);
             wxString itemColumm = item.GetText();
             m_listCtrl->GetColumn(col, item);
             wxString labelColumm = item.GetText();
 
-            node->AddAttribute(labelColumm, itemColumm);
             arrayString.push_back(labelColumm);
             arrayString.push_back(itemColumm);
         }
-        mail->AddChild(node);
     }
-
-    return true;
 }
-
-
 
 void CPanel::SetValue(const wxArrayString& arrayString)
 {
-    int i = 0;
-    auto itr = arrayString.begin();
-    long itemIndex = m_listCtrl->InsertItem(0, *itr);
+    m_grid->AppendRows();
 
-    while(++itr != arrayString.end())
-        m_listCtrl->SetItem(itemIndex, ++i, *itr);
+    int countRow = m_grid->GetNumberRows() - 1;
+    int countCol = m_grid->GetNumberCols();
+
+    for(auto itr = arrayString.begin(); itr != arrayString.end(); ++itr) {
+        wxString t_str = *itr;
+        for(int i = 0; i < countCol; i++)
+            if(t_str == m_grid->GetColLabelValue(i))
+                m_grid->SetCellValue(countRow, i, *(++itr));
+    }
 }
 
-wxArrayString CPanel::GetValue()
+void CPanel::AddNewItem()
 {
-    wxArrayString arrayString;
+    long itemIndex = m_listCtrl->InsertItem(m_listCtrl->GetItemCount(), wxT("####"));
+    for(int i = 0; i < m_listCtrl->GetColumnCount(); i++)
+        m_listCtrl->SetItem(itemIndex, i, wxT("####"));
+}
+
+void CPanel::DeleteItem()
+{
     long itemIndex = -1;
-    while((itemIndex = m_listCtrl->GetNextItem(itemIndex, wxLIST_NEXT_ALL, wxLIST_STATE_DONTCARE)) != wxNOT_FOUND) {
-        for(int col = 0; col < m_listCtrl->GetColumnCount(); col++) {
-            arrayString.Add(m_listCtrl->GetItemText(itemIndex, col));
-        }
-    }
-    return arrayString;
+    itemIndex = m_listCtrl->GetNextItem(itemIndex, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+    m_listCtrl->DeleteItem(itemIndex);
 }

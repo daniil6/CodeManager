@@ -1,18 +1,20 @@
 #ifndef CMAINFRAME_H
 #define CMAINFRAME_H
 
+#include "panel/panel.h"
 #include <wx/listbook.h>
 #include <wx/wx.h>
-#include "panel/panel.h"
 
 class CMainFrame : public wxFrame
 {
 private:
-    wxXmlDocument m_xmlDocument;
     wxListbook* m_choicebook;
 
     void CreateMenuBar();
+    void LoadXml();
     void OnSaveXml(wxCommandEvent& event);
+    void OnAddNewItem(wxCommandEvent& event);
+    void OnDeleteItem(wxCommandEvent& event);
 
 public:
     CMainFrame(wxWindow* parent = nullptr);
