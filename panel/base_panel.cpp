@@ -40,20 +40,24 @@ bool CBasePanel::SaveXmlFileFromList(wxXmlNode* mail)
     int count_web = 0;
     for(auto itr = arrayString.begin(); itr != arrayString.end(); ++itr) {
         wxString t_string = *itr;
-        if(t_string == m_attribute.webSite && mail != nullptr) {
+
+        if(mail != nullptr && t_string == m_attribute.webSite) {
             t_string = *(++itr);
-            if(t_string != m_attribute.mail) {
+            if(t_string.Find(m_attribute.mail) != -1) {
+                node = mail;
+                node->AddAttribute(m_attribute.webSite, t_string);
+            } else {
                 wxString temp = wxString::Format(wxT("%s%d"), m_attribute.web, count_web++);
                 node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, temp);
                 node->AddAttribute(m_attribute.webSite, t_string);
                 mail->AddChild(node);
-            } else
-                node = mail;
+            }
         }
+
         if(node != nullptr && t_string == m_attribute.login)
-            node->AddAttribute(t_string, *(++itr));
+            node->AddAttribute(m_attribute.login, *(++itr));
         if(node != nullptr && t_string == m_attribute.password)
-            node->AddAttribute(t_string, *(++itr));
+            node->AddAttribute(m_attribute.password, *(++itr));
     }
 
     return true;

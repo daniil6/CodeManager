@@ -6,7 +6,7 @@ CPanel::CPanel(wxWindow* window, wxString namePanel)
     , m_namePanel(namePanel)
 {
     m_grid = new wxGrid(this, NewControlId());
-    m_grid->CreateGrid(0, 5);
+    m_grid->CreateGrid(0, 3, wxGrid::wxGridSelectRows);
 
     // Hide labels rows
     m_grid->SetRowLabelSize(0);
@@ -14,12 +14,6 @@ CPanel::CPanel(wxWindow* window, wxString namePanel)
     m_grid->SetColLabelValue(0, m_attribute.webSite);
     m_grid->SetColLabelValue(1, m_attribute.login);
     m_grid->SetColLabelValue(2, m_attribute.password);
-    m_grid->SetColLabelValue(3, m_attribute.mail);
-    m_grid->SetColLabelValue(4, m_attribute.web);
-
-    // m_listCtrl = new wxListCtrl(this, NewControlId(), wxDefaultPosition, wxDefaultSize, wxLC_REPORT |
-    // wxLC_EDIT_LABELS);  m_listCtrl->InsertColumn(0, attribute.webSite);  m_listCtrl->InsertColumn(1,
-    // attribute.login); m_listCtrl->InsertColumn(2, attribute.password);
 
     wxBoxSizer* h_box = new wxBoxSizer(wxHORIZONTAL);
     h_box->Add(m_grid, 1, wxEXPAND);
@@ -32,21 +26,13 @@ CPanel::~CPanel()
 
 void CPanel::GetValue(wxArrayString& arrayString)
 {
-    long itemIndex = -1;
-    while((itemIndex = m_listCtrl->GetNextItem(itemIndex, wxLIST_NEXT_ALL, wxLIST_STATE_DONTCARE)) != wxNOT_FOUND) {
-        wxListItem item;
-        item.SetId(itemIndex);
-        item.SetMask(wxLIST_MASK_TEXT);
+    int countRow = m_grid->GetNumberRows();
+    int countCol = m_grid->GetNumberCols();
 
-        for(int col = 0; col < m_listCtrl->GetColumnCount(); col++) {
-            item.SetColumn(col);
-            m_listCtrl->GetItem(item);
-            wxString itemColumm = item.GetText();
-            m_listCtrl->GetColumn(col, item);
-            wxString labelColumm = item.GetText();
-
-            arrayString.push_back(labelColumm);
-            arrayString.push_back(itemColumm);
+    for(int row = 0; row < countRow; row++) {
+        for(int col = 0; col < countCol; col++) {
+            arrayString.push_back(m_grid->GetColLabelValue(col));
+            arrayString.push_back(m_grid->GetCellValue(row, col));
         }
     }
 }
@@ -66,16 +52,53 @@ void CPanel::SetValue(const wxArrayString& arrayString)
     }
 }
 
+void CPanel::GetSizeAllColumn(wxArrayInt& ArraySizeCol)
+{
+    int countCol = m_grid->GetNumberCols();
+
+    m_grid->AutoSize();
+
+    for(int col = 0; col < countCol; col++)
+        ArraySizeCol.push_back(m_grid->GetColSize(col));
+}
+
+void CPanel::SetSizeAllColumn(const wxArrayInt& ArraySizeCol)
+{
+    int size = ArraySizeCol.size();
+    for(int i = 0; i < size; i++)
+        m_grid->SetColSize(i, ArraySizeCol[i]);
+
+    int width = 0;
+    int height = 0;
+
+    int countRow = m_grid->GetNumberRows();
+    int countCol = m_grid->GetNumberCols();
+
+    for(int col = 0; col < countCol; col++)
+        height += m_grid->GetColSize(col);
+
+    for(int row = 0; row < countRow; row++)
+        width += m_grid->GetRowSize(row);
+
+    this->SetMinSize(wxSize(height, width));
+}
+
 void CPanel::AddNewItem()
 {
-    long itemIndex = m_listCtrl->InsertItem(m_listCtrl->GetItemCount(), wxT("####"));
-    for(int i = 0; i < m_listCtrl->GetColumnCount(); i++)
-        m_listCtrl->SetItem(itemIndex, i, wxT("####"));
+    m_grid->AppendRows();
 }
 
 void CPanel::DeleteItem()
 {
-    long itemIndex = -1;
-    itemIndex = m_listCtrl->GetNextItem(itemIndex, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
-    m_listCtrl->DeleteItem(itemIndex);
+    if(m_grid->GetNumberRows() != 0) {
+        wxArrayInt arrayNumberRows = m_grid->GetSelectedRows();
+        if(arrayNumberRows.empty() == false) {
+            wxMessageDialog dlg(this, wxT("Delete item table?"), wxT("Delete item table"), wxOK | wxCANCEL);
+            if(dlg.ShowModal() == wxID_OK)
+                for(auto& p : arrayNumberRows)
+                    m_grid->DeleteRows(p);
+        } else
+            wxMessageBox(wxT("Selected item from table for delete"));
+    } else
+        wxMessageBox(wxT("No item for delete"));
 }

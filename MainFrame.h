@@ -10,11 +10,14 @@ class CMainFrame : public wxFrame
 private:
     wxListbook* m_choicebook;
 
+    void ResizePageInListbook();
     void CreateMenuBar();
     void LoadXml();
     void OnSaveXml(wxCommandEvent& event);
     void OnAddNewItem(wxCommandEvent& event);
     void OnDeleteItem(wxCommandEvent& event);
+    void OnAddPage(wxCommandEvent& event);
+    void OnDeletePage(wxCommandEvent& event);
 
 public:
     CMainFrame(wxWindow* parent = nullptr);

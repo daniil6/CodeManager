@@ -5,11 +5,11 @@
 #include <wx/xml/xml.h>
 
 struct TAttributeXml {
-    wxString web = wxT("web_");
+    wxString web = wxT("web");
+    wxString mail = wxT("@");
     wxString webSite = wxT("WebSite");
     wxString login = wxT("Login");
     wxString password = wxT("Password");
-    wxString mail = wxT("#####");
 };
 
 class CBasePanel : public wxPanel

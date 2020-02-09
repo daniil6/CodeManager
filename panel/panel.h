@@ -25,6 +25,8 @@ public:
 
     void AddNewItem();
     void DeleteItem();
+    void GetSizeAllColumn(wxArrayInt& ArraySizeCol);
+    void SetSizeAllColumn(const wxArrayInt& ArraySizeCol);
 };
 
 #endif // CPANEL_H
