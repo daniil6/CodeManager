@@ -12,7 +12,6 @@
 class CPanel : public CBasePanel
 {
 private:
-    wxString m_namePanel;
     wxGrid* m_grid;
     wxListCtrl* m_listCtrl;
 

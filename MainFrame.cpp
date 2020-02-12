@@ -38,10 +38,10 @@ void CMainFrame::LoadXml()
         if(resLoad == true) {
             wxXmlNode* mail = root->GetChildren();
             while(mail != nullptr) {
-                wxString nameMail = mail->GetName();
+                wxString nameMail = mail->GetAttribute(wxT("NamePage"));
                 CPanel* panel = new CPanel(m_choicebook, nameMail);
-                m_choicebook->AddPage(panel, nameMail);
                 panel->LoadXmlFileInList(mail);
+                m_choicebook->AddPage(panel, nameMail);
                 mail = mail->GetNext();
             }
         }
@@ -60,15 +60,15 @@ void CMainFrame::OnSaveXml(wxCommandEvent& event)
         if(windowPage != nullptr) {
             CPanel* panelPage = dynamic_cast<CPanel*>(windowPage);
             if(panelPage != nullptr) {
-                wxString namePage = m_choicebook->GetPageText(page);
-                wxXmlNode* nodePage = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, namePage);
-                panelPage->SaveXmlFileFromList(nodePage);
+                wxXmlNode* nodePage = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxString::Format(wxT("page%d"), page));
                 root->AddChild(nodePage);
+
+                panelPage->SaveXmlFileFromList(nodePage);
             }
         }
     }
-    // xmlDoc.Save("output.xml");
-    xmlDoc.Save(NAMEFILEXML);
+    xmlDoc.Save("output.xml");
+    // xmlDoc.Save(NAMEFILEXML);
 }
 
 void CMainFrame::ResizePageInListbook()

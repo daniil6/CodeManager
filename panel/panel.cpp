@@ -3,7 +3,6 @@
 
 CPanel::CPanel(wxWindow* window, wxString namePanel)
     : CBasePanel(window)
-    , m_namePanel(namePanel)
 {
     m_grid = new wxGrid(this, NewControlId());
     m_grid->CreateGrid(0, 3, wxGrid::wxGridSelectRows);
@@ -28,6 +27,19 @@ void CPanel::GetValue(wxArrayString& arrayString)
 {
     int countRow = m_grid->GetNumberRows();
     int countCol = m_grid->GetNumberCols();
+
+    arrayString.push_back(m_attribute.namePage);
+    arrayString.push_back(m_namePage);
+
+    for(int col = 0; col < countCol; col++) {
+        arrayString.push_back(m_attribute.widthCol + wxString::Format(wxT("%d"), col));
+        arrayString.push_back(wxString::Format(wxT("%d"), m_grid->GetColSize(col)));
+    }
+
+    for(int row = 0; row < countRow; row++) {
+        arrayString.push_back(m_attribute.heightRow + wxString::Format(wxT("%d"), row));
+        arrayString.push_back(wxString::Format(wxT("%d"), m_grid->GetRowHeight(row)));
+    }
 
     for(int row = 0; row < countRow; row++) {
         for(int col = 0; col < countCol; col++) {
