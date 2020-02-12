@@ -10,10 +10,13 @@ struct TAttributeXml {
     wxString namePage = wxT("NamePage");
     wxString widthCol = wxT("WidthCol");
     wxString heightRow = wxT("HeightRow");
+    wxString notFound = wxT("NOT_FOUND");
+};
+
+struct TAttributeTable {
     wxString webSite = wxT("WebSite");
     wxString login = wxT("Login");
     wxString password = wxT("Password");
-    wxString notFound = wxT("NOT_FOUND");
 };
 
 class CBasePanel : public wxPanel
@@ -21,7 +24,9 @@ class CBasePanel : public wxPanel
 private:
 protected:
     wxString m_namePage;
-    TAttributeXml m_attribute;
+    TAttributeXml m_attributeXml;
+    TAttributeTable m_attributeTable;
+    std::vector<wxString> m_attributeUser;
     virtual void SetValue(const wxArrayString& arrayString) = 0;
     virtual void GetValue(wxArrayString& arrayString) = 0;
 

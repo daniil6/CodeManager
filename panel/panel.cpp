@@ -10,9 +10,9 @@ CPanel::CPanel(wxWindow* window, wxString namePanel)
     // Hide labels rows
     m_grid->SetRowLabelSize(0);
 
-    m_grid->SetColLabelValue(0, m_attribute.webSite);
-    m_grid->SetColLabelValue(1, m_attribute.login);
-    m_grid->SetColLabelValue(2, m_attribute.password);
+    m_grid->SetColLabelValue(0, m_attributeTable.webSite);
+    m_grid->SetColLabelValue(1, m_attributeTable.login);
+    m_grid->SetColLabelValue(2, m_attributeTable.password);
 
     wxBoxSizer* h_box = new wxBoxSizer(wxHORIZONTAL);
     h_box->Add(m_grid, 1, wxEXPAND);
@@ -28,16 +28,16 @@ void CPanel::GetValue(wxArrayString& arrayString)
     int countRow = m_grid->GetNumberRows();
     int countCol = m_grid->GetNumberCols();
 
-    arrayString.push_back(m_attribute.namePage);
+    arrayString.push_back(m_attributeXml.namePage);
     arrayString.push_back(m_namePage);
 
     for(int col = 0; col < countCol; col++) {
-        arrayString.push_back(m_attribute.widthCol + wxString::Format(wxT("%d"), col));
+        arrayString.push_back(m_attributeXml.widthCol + wxString::Format(wxT("%d"), col));
         arrayString.push_back(wxString::Format(wxT("%d"), m_grid->GetColSize(col)));
     }
 
     for(int row = 0; row < countRow; row++) {
-        arrayString.push_back(m_attribute.heightRow + wxString::Format(wxT("%d"), row));
+        arrayString.push_back(m_attributeXml.heightRow + wxString::Format(wxT("%d"), row));
         arrayString.push_back(wxString::Format(wxT("%d"), m_grid->GetRowHeight(row)));
     }
 

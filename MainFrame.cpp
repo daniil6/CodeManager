@@ -68,7 +68,7 @@ void CMainFrame::OnSaveXml(wxCommandEvent& event)
         }
     }
     xmlDoc.Save("output.xml");
-    // xmlDoc.Save(NAMEFILEXML);
+    //xmlDoc.Save(NAMEFILEXML);
 }
 
 void CMainFrame::ResizePageInListbook()
