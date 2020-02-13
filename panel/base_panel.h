@@ -2,6 +2,7 @@
 #define CBASEPANEL_H
 
 #include "wx/wx.h"
+#include <map>
 #include <wx/xml/xml.h>
 
 struct TAttributeXml {
@@ -22,6 +23,21 @@ struct TAttributeTable {
 class CBasePanel : public wxPanel
 {
 private:
+    typedef void (CBasePanel::*ifuncRead)(wxXmlNode*);
+    typedef void (CBasePanel::*ifuncWrite)(wxXmlNode*, wxString);
+
+    std::map<wxString, ifuncRead> m_listReadXml;
+    std::map<wxString, ifuncWrite> m_listWriteXml;
+
+    void ReadWebXml(wxXmlNode* node);
+    void ReadPageXml(wxXmlNode* node);
+
+    void WritePageXml(wxXmlNode* node, wxString attribute);
+    void WriteColSizeXml(wxXmlNode* node, wxString attribute);
+    void WriteRowSizeXml(wxXmlNode* node, wxString attribute);
+
+    void WriteAttributeXml(wxXmlNode* node, wxString attributeName, wxString attributeValue);
+
 protected:
     wxString m_namePage;
     TAttributeXml m_attributeXml;

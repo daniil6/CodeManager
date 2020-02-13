@@ -31,17 +31,20 @@ void CPanel::GetValue(wxArrayString& arrayString)
     arrayString.push_back(m_attributeXml.namePage);
     arrayString.push_back(m_namePage);
 
-    for(int col = 0; col < countCol; col++) {
-        arrayString.push_back(m_attributeXml.widthCol + wxString::Format(wxT("%d"), col));
-        arrayString.push_back(wxString::Format(wxT("%d"), m_grid->GetColSize(col)));
-    }
+    wxString t_string;
+    for(int col = 0; col < countCol; col++)
+        t_string.append(wxString::Format(wxT("%d;"), m_grid->GetColSize(col)));
+    arrayString.push_back(m_attributeXml.widthCol);
+    arrayString.push_back(t_string);
+
+    t_string.Clear();
+    for(int row = 0; row < countRow; row++)
+        t_string.append(wxString::Format(wxT("%d;"), m_grid->GetRowSize(row)));
+    arrayString.push_back(m_attributeXml.heightRow);
+    arrayString.push_back(t_string);
 
     for(int row = 0; row < countRow; row++) {
-        arrayString.push_back(m_attributeXml.heightRow + wxString::Format(wxT("%d"), row));
-        arrayString.push_back(wxString::Format(wxT("%d"), m_grid->GetRowHeight(row)));
-    }
-
-    for(int row = 0; row < countRow; row++) {
+        arrayString.push_back(wxT("Next"));
         for(int col = 0; col < countCol; col++) {
             arrayString.push_back(m_grid->GetColLabelValue(col));
             arrayString.push_back(m_grid->GetCellValue(row, col));
