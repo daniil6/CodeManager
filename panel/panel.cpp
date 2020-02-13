@@ -44,7 +44,7 @@ void CPanel::GetValue(wxArrayString& arrayString)
     arrayString.push_back(t_string);
 
     for(int row = 0; row < countRow; row++) {
-        arrayString.push_back(wxT("Next"));
+        arrayString.push_back(m_attributeXml.web);
         for(int col = 0; col < countCol; col++) {
             arrayString.push_back(m_grid->GetColLabelValue(col));
             arrayString.push_back(m_grid->GetCellValue(row, col));

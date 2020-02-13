@@ -8,9 +8,15 @@ CBasePanel::CBasePanel(wxWindow* window)
     m_listReadXml.insert(std::pair<wxString, ifuncRead>(m_attributeXml.page, &CBasePanel::ReadPageXml));
     m_listReadXml.insert(std::pair<wxString, ifuncRead>(m_attributeXml.web, &CBasePanel::ReadWebXml));
 
-    m_listWriteXml.insert(std::pair<wxString, ifuncWrite>(m_attributeXml.namePage, &CBasePanel::WritePageXml));
-    m_listWriteXml.insert(std::pair<wxString, ifuncWrite>(m_attributeXml.widthCol, &CBasePanel::WriteColSizeXml));
-    m_listWriteXml.insert(std::pair<wxString, ifuncWrite>(m_attributeXml.heightRow, &CBasePanel::WriteRowSizeXml));
+    m_listWriteXml.insert(std::pair<wxString, ifuncWrite>(m_attributeXml.namePage, &CBasePanel::WriteAttributeXml));
+    m_listWriteXml.insert(std::pair<wxString, ifuncWrite>(m_attributeXml.widthCol, &CBasePanel::WriteAttributeXml));
+    m_listWriteXml.insert(std::pair<wxString, ifuncWrite>(m_attributeXml.heightRow, &CBasePanel::WriteAttributeXml));
+
+    m_listWriteXml.insert(std::pair<wxString, ifuncWrite>(m_attributeTable.webSite, &CBasePanel::WriteAttributeXml));
+    m_listWriteXml.insert(std::pair<wxString, ifuncWrite>(m_attributeTable.login, &CBasePanel::WriteAttributeXml));
+    m_listWriteXml.insert(std::pair<wxString, ifuncWrite>(m_attributeTable.password, &CBasePanel::WriteAttributeXml));
+
+    m_listWriteXml.insert(std::pair<wxString, ifuncWrite>(m_attributeXml.web, &CBasePanel::CreateNodeXml));
 
     m_attributeUser.push_back(m_attributeTable.webSite);
     m_attributeUser.push_back(m_attributeTable.login);
@@ -60,46 +66,28 @@ bool CBasePanel::SaveXmlFileFromList(wxXmlNode* mail)
 
     GetValue(arrayString);
 
-    arrayString.push_back(wxT("TestAttribute"));
-    arrayString.push_back(wxT("TestValue"));
-
     for(auto itr = arrayString.begin(); itr != arrayString.end(); ++itr) {
         wxString t_string = *itr;
 
-        for(auto& p : m_listWriteXml)
-            if(node != nullptr && t_string == p.first)
-                (this->*p.second)(node, *(++itr));
-
-        if(t_string == wxT("Next")) {
-            wxString temp = wxString::Format(wxT("%s%d"), m_attributeXml.web, count_web++);
-            node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, temp);
-            mail->AddChild(node);
+        for(auto& p : m_listWriteXml) {
+            if(node != nullptr && t_string == p.first) {
+                TAttributeParseXml attr{ mail, node, p.first, itr, count_web };
+                (this->*p.second)(attr);
+            }
         }
-
-        for(auto& p : m_attributeUser)
-            if(node != nullptr && t_string == p)
-                node->AddAttribute(p, *(++itr));
     }
 
     return true;
 }
 
-void CBasePanel::WriteAttributeXml(wxXmlNode* node, wxString attributeName, wxString attributeValue)
+void CBasePanel::CreateNodeXml(TAttributeParseXml& attr)
 {
-    node->AddAttribute(attributeName, attributeValue);
+    wxString temp = wxString::Format(wxT("%s%d"), attr.attributeName, attr.count++);
+    attr.child = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, temp);
+    attr.parent->AddChild(attr.child);
 }
 
-void CBasePanel::WritePageXml(wxXmlNode* node, wxString attribute)
+void CBasePanel::WriteAttributeXml(TAttributeParseXml& attr)
 {
-    node->AddAttribute(m_attributeXml.namePage, attribute);
-}
-
-void CBasePanel::WriteColSizeXml(wxXmlNode* node, wxString attribute)
-{
-    node->AddAttribute(m_attributeXml.widthCol, attribute);
-}
-
-void CBasePanel::WriteRowSizeXml(wxXmlNode* node, wxString attribute)
-{
-    node->AddAttribute(m_attributeXml.heightRow, attribute);
+    attr.child->AddAttribute(attr.attributeName, *(++attr.itrAttributeValue));
 }
