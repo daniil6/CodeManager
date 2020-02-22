@@ -2,7 +2,7 @@
 #include <wx/stdpaths.h>
 
 CPanel::CPanel(wxWindow* window, wxString namePanel)
-    : CBasePanel(window, namePanel)
+    : CXmlParse(window, namePanel)
 {
     m_grid = new wxGrid(this, NewControlId());
     m_grid->CreateGrid(0, 3, wxGrid::wxGridSelectRows);

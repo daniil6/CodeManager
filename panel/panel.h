@@ -1,7 +1,7 @@
 #ifndef CPANEL_H
 #define CPANEL_H
 
-#include "base_panel.h"
+#include "xmlparse.h"
 #include <wx/grid.h>
 #include <wx/listctrl.h>
 #include <wx/xml/xml.h>
@@ -9,7 +9,7 @@
 #define NAMEFILEXML wxT("KeyByAllTheDoor.xml")
 #define ROOTXML wxT("root")
 
-class CPanel : public CBasePanel
+class CPanel : public CXmlParse
 {
 private:
     wxGrid* m_grid;

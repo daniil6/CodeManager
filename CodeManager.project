@@ -6,10 +6,14 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="panel">
+    <File Name="panel/xmlparse.h"/>
+    <File Name="panel/xmlparse.cpp"/>
+    <File Name="panel/basepanel.cpp"/>
+    <File Name="panel/basepanel.h"/>
+    <File Name="panel/xmlcodemanager.cpp"/>
+    <File Name="panel/xmlcodemanager.h"/>
     <File Name="panel/panel.h"/>
     <File Name="panel/panel.cpp"/>
-    <File Name="panel/base_panel.h"/>
-    <File Name="panel/base_panel.cpp"/>
   </VirtualDirectory>
   <Description/>
   <Dependencies/>
