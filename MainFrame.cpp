@@ -50,25 +50,38 @@ void CMainFrame::LoadXml()
     ResizePageInListbook();
 }
 
+template <typename TReturn, typename TClass, typename... TParam>
+TReturn CMainFrame::GetClassMethod(int numPage, TReturn (TClass::*func)(TParam...), TParam... param)
+{
+    if(m_choicebook->GetPageCount() != 0) {
+        wxWindow* windowPage = m_choicebook->GetPage(numPage);
+        if(windowPage != nullptr) {
+            TClass* panelPage = dynamic_cast<TClass*>(windowPage);
+            if(panelPage != nullptr && func != nullptr)
+                return (panelPage->*func)(param...);
+            else
+                return nullptr;
+        } else
+            return nullptr;
+    } else
+        return nullptr;
+}
+
+#include "panel/xmlparsetest.h"
+
 void CMainFrame::OnSaveXml(wxCommandEvent& event)
 {
-    wxXmlDocument xmlDoc;
-    wxXmlNode* root = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, ROOTXML);
-    xmlDoc.SetRoot(root);
-    for(unsigned int page = 0; page < m_choicebook->GetPageCount(); page++) {
-        wxWindow* windowPage = m_choicebook->GetPage(page);
-        if(windowPage != nullptr) {
-            CPanel* panelPage = dynamic_cast<CPanel*>(windowPage);
-            if(panelPage != nullptr) {
-                wxXmlNode* nodePage = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxString::Format(wxT("page%d"), page));
-                root->AddChild(nodePage);
+    wxXmlNode* root = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("root"));
 
-                panelPage->SaveXmlFileFromList(nodePage);
-            }
-        }
+    int countPage = m_choicebook->GetPageCount();
+    for(int page = 0; page < countPage; page++) {
+
+        wxXmlNode* nodePage = GetClassMethod(page, &CPanel::SaveXmlFileFromList, page);
+        root->AddChild(nodePage);
     }
-    // xmlDoc.Save("output.xml");
-    xmlDoc.Save(NAMEFILEXML);
+
+    CXmlParseTest::CloseXmlFile(root, "output.xml");
+    // CXmlParseTest::CloseXmlFile(root, NAMEFILEXML);
 }
 
 void CMainFrame::ResizePageInListbook()

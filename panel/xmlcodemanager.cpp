@@ -3,7 +3,7 @@
 CXmlCodeManager::CXmlCodeManager(wxWindow* window, wxString namePage)
     : CBasePanel(window, namePage)
 {
-    m_namePage = namePage;
+    //m_namePage = namePage;
     m_listReadXml.insert(std::pair<wxString, ifuncRead>(m_attributeXml.page, &CXmlCodeManager::ReadPageXml));
     m_listReadXml.insert(std::pair<wxString, ifuncRead>(m_attributeXml.web, &CXmlCodeManager::ReadWebXml));
 

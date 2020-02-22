@@ -6,6 +6,8 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="panel">
+    <File Name="panel/xmlparsetest.cpp"/>
+    <File Name="panel/xmlparsetest.h"/>
     <File Name="panel/xmlparse.h"/>
     <File Name="panel/xmlparse.cpp"/>
     <File Name="panel/basepanel.cpp"/>

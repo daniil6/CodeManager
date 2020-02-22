@@ -24,25 +24,34 @@ void CXmlParse::LoadXmlFileInList(wxXmlNode* node)
     }
 }
 
-bool CXmlParse::SaveXmlFileFromList(wxXmlNode* mail)
+template <typename R, typename... P> R CXmlParse::methods(R (*func)(P...), P... params)
+{
+    if(func != nullptr)
+        return (*func)(params...);
+}
+
+wxXmlNode* CXmlParse::SaveXmlFileFromList(int page)
 {
     int count_web = 0;
-
     wxArrayString arrayString;
-    wxXmlNode* node = mail;
+    wxXmlNode* parent = nullptr;
+    wxXmlNode* node = nullptr;
 
     GetValue(arrayString);
+    parent = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxString::Format(wxT("page%d"), page));
+    node = parent;
 
     for(auto itr = arrayString.begin(); itr != arrayString.end(); ++itr) {
         wxString t_string = *itr;
 
         for(auto& p : m_listWriteXml) {
             if(node != nullptr && t_string == p.first) {
-                TAttributeParseXml attr{ mail, node, p.first, itr, count_web };
+                // methods(p.second, parent, node, p.first, itr, count_web);
+                TAttributeParseXml attr{ parent, node, p.first, itr, count_web };
                 (this->*p.second)(attr);
             }
         }
     }
 
-    return true;
+    return parent;
 }

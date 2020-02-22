@@ -10,6 +10,9 @@ class CMainFrame : public wxFrame
 private:
     wxListbook* m_choicebook;
 
+    template <typename TReturn, typename TClass, typename... TParam>
+    TReturn GetClassMethod(int numPage, TReturn (TClass::*func)(TParam...), TParam... param);
+
     void ResizePageInListbook();
     void CreateMenuBar();
     void LoadXml();
