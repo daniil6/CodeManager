@@ -53,7 +53,7 @@ protected:
     virtual void GetValue(wxArrayString& arrayString) = 0;
 
 public:
-    CBasePanel(wxWindow* window);
+    CBasePanel(wxWindow* window, wxString namePage);
     ~CBasePanel();
 
     void LoadXmlFileInList(wxXmlNode* node);

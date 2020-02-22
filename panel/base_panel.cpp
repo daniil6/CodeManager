@@ -2,9 +2,10 @@
 #include <map>
 #include <vector>
 
-CBasePanel::CBasePanel(wxWindow* window)
+CBasePanel::CBasePanel(wxWindow* window, wxString namePage)
     : wxPanel(window, NewControlId())
 {
+    m_namePage = namePage;
     m_listReadXml.insert(std::pair<wxString, ifuncRead>(m_attributeXml.page, &CBasePanel::ReadPageXml));
     m_listReadXml.insert(std::pair<wxString, ifuncRead>(m_attributeXml.web, &CBasePanel::ReadWebXml));
 
