@@ -67,8 +67,6 @@ TReturn CMainFrame::GetClassMethod(int numPage, TReturn (TClass::*func)(TParam..
         return nullptr;
 }
 
-#include "panel/xmlparsetest.h"
-
 void CMainFrame::OnSaveXml(wxCommandEvent& event)
 {
     wxXmlNode* root = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("root"));
@@ -80,8 +78,10 @@ void CMainFrame::OnSaveXml(wxCommandEvent& event)
         root->AddChild(nodePage);
     }
 
-    CXmlParseTest::CloseXmlFile(root, "output.xml");
-    // CXmlParseTest::CloseXmlFile(root, NAMEFILEXML);
+    wxXmlDocument xmlDoc;
+    xmlDoc.SetRoot(root);
+    xmlDoc.Save("output.xml");
+    // xmlDoc.Save(NAMEFILEXML);
 }
 
 void CMainFrame::ResizePageInListbook()

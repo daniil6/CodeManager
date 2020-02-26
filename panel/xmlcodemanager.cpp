@@ -3,7 +3,6 @@
 CXmlCodeManager::CXmlCodeManager(wxWindow* window, wxString namePage)
     : CBasePanel(window, namePage)
 {
-    //m_namePage = namePage;
     m_listReadXml.insert(std::pair<wxString, ifuncRead>(m_attributeXml.page, &CXmlCodeManager::ReadPageXml));
     m_listReadXml.insert(std::pair<wxString, ifuncRead>(m_attributeXml.web, &CXmlCodeManager::ReadWebXml));
 
@@ -33,14 +32,14 @@ CXmlCodeManager::~CXmlCodeManager()
 
 void CXmlCodeManager::CreateNodeXml(TAttributeParseXml& attr)
 {
-    wxString temp = wxString::Format(wxT("%s%d"), attr.attributeName, attr.count++);
+    wxString temp = wxString::Format(wxT("%s%d"), attr.name, attr.count++);
     attr.child = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, temp);
     attr.parent->AddChild(attr.child);
 }
 
 void CXmlCodeManager::WriteAttributeXml(TAttributeParseXml& attr)
 {
-    attr.child->AddAttribute(attr.attributeName, *(++attr.itrAttributeValue));
+    attr.child->AddAttribute(attr.name, *(++attr.itr));
 }
 
 void CXmlCodeManager::ReadPageXml(wxXmlNode* node)

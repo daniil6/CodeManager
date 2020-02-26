@@ -18,10 +18,10 @@ struct TAttributeXml {
 
 struct TAttributeParseXml {
     wxXmlNode* parent;
-    wxXmlNode*& child;
-    wxString attributeName;
-    wxString* itrAttributeValue;
-    int& count;
+    wxXmlNode* child;
+    wxString name;
+    wxString* itr;
+    int count;
 };
 
 struct TAttributeTable {
@@ -38,6 +38,9 @@ private:
     typedef void (CXmlCodeManager::*ifuncRead)(wxXmlNode*);
     typedef void (CXmlCodeManager::*ifuncWrite)(TAttributeParseXml&);
 
+    typedef std::map<wxString, ifuncRead> ListReadXml;
+    typedef std::map<wxString, ifuncWrite> ListWriteXml;
+
     void ReadWebXml(wxXmlNode* node);
     void ReadPageXml(wxXmlNode* node);
 
@@ -51,8 +54,8 @@ protected:
     TAttributeXml m_attributeXml;
     TAttributeTable m_attributeTable;
 
-    std::map<wxString, ifuncRead> m_listReadXml;
-    std::map<wxString, ifuncWrite> m_listWriteXml;
+    ListReadXml m_listReadXml;
+    ListWriteXml m_listWriteXml;
 
 public:
     CXmlCodeManager(wxWindow* window, wxString namePage);

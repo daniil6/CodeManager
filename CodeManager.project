@@ -6,8 +6,6 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="panel">
-    <File Name="panel/xmlparsetest.cpp"/>
-    <File Name="panel/xmlparsetest.h"/>
     <File Name="panel/xmlparse.h"/>
     <File Name="panel/xmlparse.cpp"/>
     <File Name="panel/basepanel.cpp"/>
@@ -110,7 +108,7 @@ WXCFG=gcc_lib/mswud]]>
         <SearchPaths/>
       </Completion>
     </Configuration>
-    <Configuration Name="Release" CompilerType="" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+    <Configuration Name="Release" CompilerType="gcc.exe (i686-posix-dwarf-rev0, Built by MinGW-W64 project) 8.1.0" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-O2;-Wall;$(shell wx-config --cxxflags --unicode=yes --debug=no)" C_Options="-O2;-Wall;$(shell wx-config --cxxflags --unicode=yes --debug=no)" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="C:\wxWidgets-3.1.2\include"/>
         <IncludePath Value="C:\wxWidgets-3.1.2\lib\gcc_lib\mswud"/>
@@ -140,7 +138,7 @@ WXCFG=gcc_lib/mswud]]>
         <Library Value="uxtheme"/>
       </Linker>
       <ResourceCompiler Options="$(shell wx-config --rcflags)" Required="no"/>
-      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Release" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)_v.2.1.1.exe" IntermediateDirectory="./Release" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
       <BuildSystem Name="Default"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[WXWIN=$(WXWIN)
