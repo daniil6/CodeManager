@@ -51,7 +51,7 @@ void CMainFrame::LoadXml()
 }
 
 template <typename TReturn, typename TClass, typename... TParam>
-TReturn CMainFrame::GetClassMethod(int numPage, TReturn (TClass::*func)(TParam...), TParam... param)
+TReturn CMainFrame::GetClassMethod(int numPage, TReturn (TClass::*func)(TParam...), TReturn error, TParam... param)
 {
     if(m_choicebook->GetPageCount() != 0) {
         wxWindow* windowPage = m_choicebook->GetPage(numPage);
@@ -60,11 +60,16 @@ TReturn CMainFrame::GetClassMethod(int numPage, TReturn (TClass::*func)(TParam..
             if(panelPage != nullptr && func != nullptr)
                 return (panelPage->*func)(param...);
             else
-                return nullptr;
+                return error;
         } else
-            return nullptr;
+            return error;
     } else
-        return nullptr;
+        return error;
+}
+
+void CMainFrame::OnAddNewItem(wxCommandEvent& event)
+{
+    GetClassMethod(m_choicebook->GetSelection(), &CPanel::AddNewItem, false);
 }
 
 void CMainFrame::OnSaveXml(wxCommandEvent& event)
@@ -73,8 +78,7 @@ void CMainFrame::OnSaveXml(wxCommandEvent& event)
 
     int countPage = m_choicebook->GetPageCount();
     for(int page = 0; page < countPage; page++) {
-
-        wxXmlNode* nodePage = GetClassMethod(page, &CPanel::SaveXmlFileFromList, page);
+        wxXmlNode* nodePage = GetClassMethod(page, &CPanel::SaveXmlFileFromList, (wxXmlNode*)nullptr, page);
         root->AddChild(nodePage);
     }
 
@@ -146,18 +150,6 @@ void CMainFrame::CreateMenuBar()
     Bind(wxEVT_COMMAND_MENU_SELECTED, CMainFrame::OnDeleteItem, this, deleteItem->GetId());
 
     SetMenuBar(menuBar);
-}
-
-void CMainFrame::OnAddNewItem(wxCommandEvent& event)
-{
-    if(m_choicebook->GetPageCount() != 0) {
-        wxWindow* windowPage = m_choicebook->GetPage(m_choicebook->GetSelection());
-        if(windowPage != nullptr) {
-            CPanel* panelPage = dynamic_cast<CPanel*>(windowPage);
-            if(panelPage != nullptr)
-                panelPage->AddNewItem();
-        }
-    }
 }
 
 void CMainFrame::OnDeleteItem(wxCommandEvent& event)

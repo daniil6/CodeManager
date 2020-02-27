@@ -98,9 +98,9 @@ void CPanel::SetSizeAllColumn(const wxArrayInt& ArraySizeCol)
     this->SetMinSize(wxSize(height, width));
 }
 
-void CPanel::AddNewItem()
+bool CPanel::AddNewItem()
 {
-    m_grid->AppendRows();
+    return m_grid->AppendRows();
 }
 
 void CPanel::DeleteItem()

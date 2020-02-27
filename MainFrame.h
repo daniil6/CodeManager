@@ -14,11 +14,12 @@ private:
      * @brief Шаблон функция для получения класса СPanel и выполнения её функции
      * @param numPage - номер страницы в wxListbook
      * @param func - функция выполнения
+     * @param error - значение возвращаемое в случае ошибки
      * @param param - параметры передаваемы в функцию
      * @return перееменную функции
      */
     template <typename TReturn, typename TClass, typename... TParam>
-    TReturn GetClassMethod(int numPage, TReturn (TClass::*func)(TParam...), TParam... param);
+    TReturn GetClassMethod(int numPage, TReturn (TClass::*func)(TParam...), TReturn error, TParam... param);
 
     /**
      * @brief Выравнивает столбцы на всех страницах wxListbook по максимальным размерам колнки

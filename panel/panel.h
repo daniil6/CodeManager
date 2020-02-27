@@ -22,7 +22,7 @@ public:
     CPanel(wxWindow* window, wxString namePanel);
     ~CPanel();
 
-    void AddNewItem();
+    bool AddNewItem();
     void DeleteItem();
     void GetSizeAllColumn(wxArrayInt& ArraySizeCol);
     void SetSizeAllColumn(const wxArrayInt& ArraySizeCol);
