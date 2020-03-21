@@ -23,9 +23,9 @@ public:
     ~CPanel();
 
     bool AddNewItem();
-    void DeleteItem();
-    void GetSizeAllColumn(wxArrayInt& ArraySizeCol);
-    void SetSizeAllColumn(const wxArrayInt& ArraySizeCol);
+    bool DeleteItem();
+    bool GetSizeAllColumn(wxArrayInt& ArraySizeCol);
+    bool SetSizeAllColumn(const wxArrayInt& ArraySizeCol);
 };
 
 #endif // CPANEL_H

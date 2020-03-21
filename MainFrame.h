@@ -19,7 +19,7 @@ private:
      * @return перееменную функции
      */
     template <typename TReturn, typename TClass, typename... TParam>
-    TReturn GetClassMethod(int numPage, TReturn (TClass::*func)(TParam...), TReturn error, TParam... param);
+    TReturn GetClassMethod(int numPage, TReturn (TClass::*func)(TParam...), TReturn error, TParam&&... param);
 
     /**
      * @brief Выравнивает столбцы на всех страницах wxListbook по максимальным размерам колнки

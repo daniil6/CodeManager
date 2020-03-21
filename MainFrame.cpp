@@ -51,7 +51,7 @@ void CMainFrame::LoadXml()
 }
 
 template <typename TReturn, typename TClass, typename... TParam>
-TReturn CMainFrame::GetClassMethod(int numPage, TReturn (TClass::*func)(TParam...), TReturn error, TParam... param)
+TReturn CMainFrame::GetClassMethod(int numPage, TReturn (TClass::*func)(TParam...), TReturn error, TParam&&... param)
 {
     if(m_choicebook->GetPageCount() != 0) {
         wxWindow* windowPage = m_choicebook->GetPage(numPage);
@@ -78,7 +78,7 @@ void CMainFrame::OnSaveXml(wxCommandEvent& event)
 
     int countPage = m_choicebook->GetPageCount();
     for(int page = 0; page < countPage; page++) {
-        wxXmlNode* nodePage = GetClassMethod(page, &CPanel::SaveXmlFileFromList, (wxXmlNode*)nullptr, page);
+        wxXmlNode* nodePage = GetClassMethod(page, &CPanel::SaveXmlFileFromList, (wxXmlNode*)nullptr, (int)page);
         root->AddChild(nodePage);
     }
 
@@ -92,31 +92,22 @@ void CMainFrame::ResizePageInListbook()
 {
     wxArrayInt arraySizeCol;
 
-    for(unsigned int page = 0; page < m_choicebook->GetPageCount(); page++) {
-        wxWindow* windowPage = m_choicebook->GetPage(page);
-        if(windowPage != nullptr) {
-            CPanel* panelPage = dynamic_cast<CPanel*>(windowPage);
-            if(panelPage != nullptr) {
-                wxArrayInt new_arraySizeCol;
-                panelPage->GetSizeAllColumn(new_arraySizeCol);
-                if(new_arraySizeCol.size() == arraySizeCol.size()) {
-                    for(unsigned int i = 0; i < new_arraySizeCol.size(); i++)
-                        if(arraySizeCol[i] < new_arraySizeCol[i])
-                            arraySizeCol[i] = new_arraySizeCol[i];
-                } else
-                    arraySizeCol = new_arraySizeCol;
-            }
-        }
+    int pageCount = m_choicebook->GetPageCount();
+    for(int page = 0; page < pageCount; page++) {
+
+        wxArrayInt new_arraySizeCol;
+        GetClassMethod(page, &CPanel::GetSizeAllColumn, false, new_arraySizeCol);
+
+        if(new_arraySizeCol.size() == arraySizeCol.size()) {
+            for(unsigned int i = 0; i < new_arraySizeCol.size(); i++)
+                if(arraySizeCol[i] < new_arraySizeCol[i])
+                    arraySizeCol[i] = new_arraySizeCol[i];
+        } else
+            arraySizeCol = new_arraySizeCol;
     }
 
-    for(unsigned int page = 0; page < m_choicebook->GetPageCount(); page++) {
-        wxWindow* windowPage = m_choicebook->GetPage(page);
-        if(windowPage != nullptr) {
-            CPanel* panelPage = dynamic_cast<CPanel*>(windowPage);
-            if(panelPage != nullptr)
-                panelPage->SetSizeAllColumn(arraySizeCol);
-        }
-    }
+    for(int page = 0; page < pageCount; page++)
+        GetClassMethod(page, &CPanel::SetSizeAllColumn, false, *(const_cast<const wxArrayInt*>(&arraySizeCol)));
 }
 
 void CMainFrame::CreateMenuBar()
@@ -156,14 +147,9 @@ void CMainFrame::OnDeleteItem(wxCommandEvent& event)
 {
     if(m_choicebook->GetPageCount() != 0) {
         int selected = m_choicebook->GetSelection();
-        if(selected != -1) {
-            wxWindow* windowPage = m_choicebook->GetPage(selected);
-            if(windowPage != nullptr) {
-                CPanel* panelPage = dynamic_cast<CPanel*>(windowPage);
-                if(panelPage != nullptr)
-                    panelPage->DeleteItem();
-            }
-        } else
+        if(selected != -1)
+            GetClassMethod(selected, &CPanel::DeleteItem, false);
+        else
             wxMessageBox(wxT("Select item"));
     } else
         wxMessageBox(wxT("No table for delete item"));
@@ -183,7 +169,8 @@ void CMainFrame::OnDeletePage(wxCommandEvent& event)
     if(m_choicebook->GetPageCount() != 0) {
         int selected = m_choicebook->GetSelection();
         if(selected != -1) {
-            wxMessageDialog dlg(this, wxT("Delete page"), wxT("Delete page?"), wxOK | wxCANCEL);
+            wxString namePage = m_choicebook->GetPageText(selected);
+            wxMessageDialog dlg(this, wxT("Delete page ") + namePage, wxT("Delete page?"), wxOK | wxCANCEL);
             if(dlg.ShowModal() == wxID_OK)
                 m_choicebook->DeletePage(selected);
         } else

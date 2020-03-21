@@ -67,17 +67,18 @@ void CPanel::SetValue(const wxArrayString& arrayString)
     }
 }
 
-void CPanel::GetSizeAllColumn(wxArrayInt& ArraySizeCol)
+bool CPanel::GetSizeAllColumn(wxArrayInt& ArraySizeCol)
 {
-    int countCol = m_grid->GetNumberCols();
-
     m_grid->AutoSize();
 
+    int countCol = m_grid->GetNumberCols();
     for(int col = 0; col < countCol; col++)
         ArraySizeCol.push_back(m_grid->GetColSize(col));
+
+    return true;
 }
 
-void CPanel::SetSizeAllColumn(const wxArrayInt& ArraySizeCol)
+bool CPanel::SetSizeAllColumn(const wxArrayInt& ArraySizeCol)
 {
     int size = ArraySizeCol.size();
     for(int i = 0; i < size; i++)
@@ -96,6 +97,8 @@ void CPanel::SetSizeAllColumn(const wxArrayInt& ArraySizeCol)
         width += m_grid->GetRowSize(row);
 
     this->SetMinSize(wxSize(height, width));
+
+    return true;
 }
 
 bool CPanel::AddNewItem()
@@ -103,7 +106,7 @@ bool CPanel::AddNewItem()
     return m_grid->AppendRows();
 }
 
-void CPanel::DeleteItem()
+bool CPanel::DeleteItem()
 {
     if(m_grid->GetNumberRows() != 0) {
         wxArrayInt arrayNumberRows = m_grid->GetSelectedRows();
@@ -116,4 +119,6 @@ void CPanel::DeleteItem()
             wxMessageBox(wxT("Selected item from table for delete"));
     } else
         wxMessageBox(wxT("No item for delete"));
+
+    return true;
 }
