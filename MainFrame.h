@@ -3,7 +3,6 @@
 
 #include "panel/panel.h"
 #include <wx/listbook.h>
-#include <wx/wx.h>
 
 class CMainFrame : public wxFrame
 {

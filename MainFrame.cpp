@@ -27,27 +27,17 @@ CMainFrame::~CMainFrame()
 void CMainFrame::LoadXml()
 {
     wxXmlDocument xmlDoc;
-    bool resLoad = true;
-    if(xmlDoc.Load(NAMEFILEXML) == false)
-        resLoad = false;
-    if(resLoad == true) {
-        wxXmlNode* root = xmlDoc.GetRoot();
-        if(root->GetName() != "root")
-            resLoad = false;
-
-        if(resLoad == true) {
-            wxXmlNode* mail = root->GetChildren();
-            while(mail != nullptr) {
-                wxString nameMail = mail->GetAttribute(wxT("NamePage"));
-                CPanel* panel = new CPanel(m_choicebook, nameMail);
-                panel->LoadXmlFileInList(mail);
-                m_choicebook->AddPage(panel, nameMail);
-                mail = mail->GetNext();
-            }
+    wxXmlNode* page = TXmlParse<CXmlCodeManager, TAttributeParseXml>::Open(xmlDoc, NAMEFILEXML);
+    if(page != nullptr) {
+        while(page != nullptr) {
+            wxString nameMail = page->GetAttribute(wxT("NamePage"));
+            CPanel* panel = new CPanel(m_choicebook, nameMail);
+            panel->Load(page);
+            m_choicebook->AddPage(panel, nameMail);
+            page = page->GetNext();
         }
+        ResizePageInListbook();
     }
-
-    ResizePageInListbook();
 }
 
 template <typename TReturn, typename TClass, typename... TParam>
@@ -78,14 +68,12 @@ void CMainFrame::OnSaveXml(wxCommandEvent& event)
 
     int countPage = m_choicebook->GetPageCount();
     for(int page = 0; page < countPage; page++) {
-        wxXmlNode* nodePage = GetClassMethod(page, &CPanel::SaveXmlFileFromList, (wxXmlNode*)nullptr, (int)page);
+        wxXmlNode* nodePage = GetClassMethod(page, &CPanel::Save, (wxXmlNode*)nullptr, (int)page);
         root->AddChild(nodePage);
     }
 
-    wxXmlDocument xmlDoc;
-    xmlDoc.SetRoot(root);
-    xmlDoc.Save("output.xml");
-    // xmlDoc.Save(NAMEFILEXML);
+    // TXmlParse<CXmlCodeManager, TAttributeParseXml>::Close(root);
+    TXmlParse<CXmlCodeManager, TAttributeParseXml>::Close(root, NAMEFILEXML);
 }
 
 void CMainFrame::ResizePageInListbook()

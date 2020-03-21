@@ -2,15 +2,18 @@
 #define CBASEPANEL_H
 
 #include "wx/wx.h"
+#include "xmlparse_template.h"
+
+typedef std::map<int, wxString> ListParamsXml;
 
 class CBasePanel : public wxPanel
 {
 protected:
+    enum ParamsXml { WEB = 0, PAGE, NAMEPAGE, WIDTHCOL, HEIGHTROW, NOT_FOUND, NEXT, END_PARAMS };
+    ListParamsXml m_listParamsXml;
     wxString m_namePage;
 
 public:
-    enum ProgrammResult { Success = 0, Error };
-
     CBasePanel(wxWindow* window, wxString namePage);
     ~CBasePanel();
 };

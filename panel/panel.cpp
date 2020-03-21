@@ -2,17 +2,13 @@
 #include <wx/stdpaths.h>
 
 CPanel::CPanel(wxWindow* window, wxString namePanel)
-    : CXmlParse(window, namePanel)
+    : CXmlCodeManager(window, namePanel)
 {
     m_grid = new wxGrid(this, NewControlId());
-    m_grid->CreateGrid(0, 3, wxGrid::wxGridSelectRows);
+    m_grid->CreateGrid(0, 0, wxGrid::wxGridSelectRows);
 
     // Hide labels rows
     m_grid->SetRowLabelSize(0);
-
-    m_grid->SetColLabelValue(0, m_attributeTable.webSite);
-    m_grid->SetColLabelValue(1, m_attributeTable.login);
-    m_grid->SetColLabelValue(2, m_attributeTable.password);
 
     wxBoxSizer* h_box = new wxBoxSizer(wxHORIZONTAL);
     h_box->Add(m_grid, 1, wxEXPAND);
@@ -23,28 +19,29 @@ CPanel::~CPanel()
 {
 }
 
+void CPanel::GetSizeCell(wxArrayString& array, int count, int number, int (wxGrid::*ifunc)(int) const)
+{
+    wxString t_string;
+    for(int i = 0; i < count; i++)
+        t_string.append(wxString::Format(wxT("%d;"), (m_grid->*ifunc)(i)));
+
+    array.push_back(m_listParamsXml[number]);
+    array.push_back(t_string);
+}
+
 void CPanel::GetValue(wxArrayString& arrayString)
 {
     int countRow = m_grid->GetNumberRows();
     int countCol = m_grid->GetNumberCols();
 
-    arrayString.push_back(m_attributeXml.namePage);
+    arrayString.push_back(m_listParamsXml[NAMEPAGE]);
     arrayString.push_back(m_namePage);
 
-    wxString t_string;
-    for(int col = 0; col < countCol; col++)
-        t_string.append(wxString::Format(wxT("%d;"), m_grid->GetColSize(col)));
-    arrayString.push_back(m_attributeXml.widthCol);
-    arrayString.push_back(t_string);
-
-    t_string.Clear();
-    for(int row = 0; row < countRow; row++)
-        t_string.append(wxString::Format(wxT("%d;"), m_grid->GetRowSize(row)));
-    arrayString.push_back(m_attributeXml.heightRow);
-    arrayString.push_back(t_string);
+    GetSizeCell(arrayString, countCol, WIDTHCOL, &wxGrid::GetColSize);
+    GetSizeCell(arrayString, countRow, HEIGHTROW, &wxGrid::GetRowSize);
 
     for(int row = 0; row < countRow; row++) {
-        arrayString.push_back(m_attributeXml.web);
+        arrayString.push_back(m_listParamsXml[WEB]);
         for(int col = 0; col < countCol; col++) {
             arrayString.push_back(m_grid->GetColLabelValue(col));
             arrayString.push_back(m_grid->GetCellValue(row, col));
@@ -52,18 +49,19 @@ void CPanel::GetValue(wxArrayString& arrayString)
     }
 }
 
-void CPanel::SetValue(const wxArrayString& arrayString)
+void CPanel::SetValue(const wxArrayString& arrayString, int countAttribute)
 {
     m_grid->AppendRows();
 
     int countRow = m_grid->GetNumberRows() - 1;
-    int countCol = m_grid->GetNumberCols();
+    int col = 0;
+
+    while(m_grid->GetNumberCols() < countAttribute)
+        m_grid->AppendCols();
 
     for(auto itr = arrayString.begin(); itr != arrayString.end(); ++itr) {
-        wxString t_str = *itr;
-        for(int i = 0; i < countCol; i++)
-            if(t_str == m_grid->GetColLabelValue(i))
-                m_grid->SetCellValue(countRow, i, *(++itr));
+        m_grid->SetColLabelValue(col, *itr);
+        m_grid->SetCellValue(countRow, col++, *(++itr));
     }
 }
 
