@@ -1,8 +1,8 @@
 #ifndef CBASEPANEL_H
 #define CBASEPANEL_H
 
-#include "wx/wx.h"
 #include "xmlparse_template.h"
+#include "wx/wx.h"
 
 typedef std::map<int, wxString> ListParamsXml;
 

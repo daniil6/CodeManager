@@ -6,8 +6,7 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="panel">
-    <File Name="panel/xmlparse.h"/>
-    <File Name="panel/xmlparse.cpp"/>
+    <File Name="panel/xmlparse_template.h"/>
     <File Name="panel/basepanel.cpp"/>
     <File Name="panel/basepanel.h"/>
     <File Name="panel/xmlcodemanager.cpp"/>
@@ -29,7 +28,6 @@
     <GlobalSettings>
       <Compiler Options="" C_Options="" Assembler="">
         <IncludePath Value="$(WXWIN)\include"/>
-        <IncludePath Value="$(WXWIN)\lib\gcc_lib\mswud"/>
       </Compiler>
       <Linker Options="-static">
         <LibraryPath Value="$(WXWIN)\lib\gcc_lib"/>
@@ -37,7 +35,7 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
     <Configuration Name="Debug" CompilerType="gcc.exe (i686-posix-dwarf-rev0, Built by MinGW-W64 project) 8.1.0" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-g;-O0;-std=c++11;-Wall;$(shell wx-config --cxxflags --unicode=yes  )" C_Options="-g;-O0;-Wall;$(shell wx-config --cxxflags --unicode=yes  )" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0"/>
+      <Compiler Options="-g;-O0;-Wall;$(shell wx-config --cxxflags --unicode=yes  )" C_Options="-g;-O0;-Wall;$(shell wx-config --cxxflags --unicode=yes  )" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0"/>
       <Linker Options="-mwindows;$(shell wx-config   --libs --unicode=yes);" Required="yes">
         <Library Value="wxmsw31ud_richtext"/>
         <Library Value="wxmsw31ud_xrc"/>
@@ -110,12 +108,9 @@ WXCFG=gcc_lib/mswud]]>
     </Configuration>
     <Configuration Name="Release" CompilerType="gcc.exe (i686-posix-dwarf-rev0, Built by MinGW-W64 project) 8.1.0" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-O2;-Wall;$(shell wx-config --cxxflags --unicode=yes --debug=no)" C_Options="-O2;-Wall;$(shell wx-config --cxxflags --unicode=yes --debug=no)" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
-        <IncludePath Value="C:\wxWidgets-3.1.2\include"/>
-        <IncludePath Value="C:\wxWidgets-3.1.2\lib\gcc_lib\mswud"/>
         <Preprocessor Value="NDEBUG"/>
       </Compiler>
       <Linker Options="-mwindows;;$(shell wx-config --debug=no --libs --unicode=yes)" Required="yes">
-        <LibraryPath Value="C:\wxWidgets-3.1.2\lib\gcc_lib"/>
         <Library Value="wxmsw31u_core"/>
         <Library Value="kernel32"/>
         <Library Value="user32"/>
@@ -138,7 +133,7 @@ WXCFG=gcc_lib/mswud]]>
         <Library Value="uxtheme"/>
       </Linker>
       <ResourceCompiler Options="$(shell wx-config --rcflags)" Required="no"/>
-      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)_v.2.1.1.exe" IntermediateDirectory="./Release" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Release" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
       <BuildSystem Name="Default"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[WXWIN=$(WXWIN)
