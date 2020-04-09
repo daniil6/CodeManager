@@ -8,6 +8,7 @@ class CMainFrame : public wxFrame
 {
 private:
     wxListbook* m_choicebook;
+    wxTextCtrl* m_txtFind;
 
     /**
      * @brief Шаблон функция для получения класса СPanel и выполнения её функции
@@ -64,6 +65,12 @@ private:
      * @param event
      */
     void OnDeletePage(wxCommandEvent& event);
+
+    /**
+     * @brief Поиск в page и panel
+     * @param event
+     */
+    void OnEditTxtFind(wxCommandEvent& event);
 
 public:
     CMainFrame(wxWindow* parent = nullptr);

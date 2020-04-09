@@ -1,7 +1,7 @@
 #include "MainFrame.h"
 
-#define WIDTH 500
-#define HEIGHT 500
+#define WIDTH 300
+#define HEIGHT 170
 
 CMainFrame::CMainFrame(wxWindow* parent)
     : wxFrame(parent, wxID_ANY, wxT("Code Manager"))
@@ -9,15 +9,23 @@ CMainFrame::CMainFrame(wxWindow* parent)
     SetIcon(wxICON(lock));
 
     m_choicebook = new wxListbook(this, NewControlId());
+    m_txtFind = new wxTextCtrl(this, NewControlId(), wxT(""));
 
     CreateMenuBar();
 
-    wxBoxSizer* mainBox = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* mainBox = new wxBoxSizer(wxVERTICAL);
+    mainBox->Add(m_txtFind, 0, wxEXPAND);
     mainBox->Add(m_choicebook, 1, wxEXPAND);
+
+    this->SetSizerAndFit(mainBox);
 
     LoadXml();
 
-    this->SetSizerAndFit(mainBox);
+    Bind(wxEVT_TEXT, &CMainFrame::OnEditTxtFind, this, m_txtFind->GetId());
+}
+
+void CMainFrame::OnEditTxtFind(wxCommandEvent& event)
+{
 }
 
 CMainFrame::~CMainFrame()
@@ -37,7 +45,8 @@ void CMainFrame::LoadXml()
             page = page->GetNext();
         }
         ResizePageInListbook();
-    }
+    } else
+        this->SetSize(wxSize(WIDTH, HEIGHT));
 }
 
 template <typename TReturn, typename TClass, typename... TParam>
