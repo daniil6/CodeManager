@@ -1,4 +1,5 @@
 #include "MainFrame.h"
+#include "panel/settingspage.h"
 
 #define WIDTH 300
 #define HEIGHT 170
@@ -154,7 +155,8 @@ void CMainFrame::OnDeleteItem(wxCommandEvent& event)
 
 void CMainFrame::OnAddPage(wxCommandEvent& event)
 {
-    wxTextEntryDialog dlg(this, wxT("Enter name page"), wxT("Name new page"));
+    // wxTextEntryDialog dlg(this, wxT("Enter name page"), wxT("Name new page"));
+    CSettingsPage dlg(this);
     if(dlg.ShowModal() == wxID_OK) {
         wxString name = dlg.GetValue();
         m_choicebook->AddPage(new CPanel(m_choicebook, name), name);

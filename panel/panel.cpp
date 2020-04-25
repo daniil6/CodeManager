@@ -1,5 +1,6 @@
 #include "panel.h"
 #include <wx/stdpaths.h>
+#include <sorting.h>
 
 CPanel::CPanel(wxWindow* window, wxString namePanel)
     : CXmlCodeManager(window, namePanel)
@@ -109,7 +110,23 @@ bool CPanel::DeleteItem()
     if(m_grid->GetNumberRows() != 0) {
         wxArrayInt arrayNumberRows = m_grid->GetSelectedRows();
         if(arrayNumberRows.empty() == false) {
-            wxMessageDialog dlg(this, wxT("Delete item table?"), wxT("Delete item table"), wxOK | wxCANCEL);
+
+            wxString message;
+            wxString caption;
+            int size = arrayNumberRows.size();
+
+            if(size == 1) {
+                wxString t_str = m_grid->GetRowLabelValue(arrayNumberRows.front());
+                message = wxString::Format(wxT("Delete item %S?"), t_str);
+                caption = wxT("Delete item table");
+            } else {
+                BubbleSort(&arrayNumberRows[0], size - 1);
+                message = wxT("Delete items table?");
+                caption = wxT("Deletion items table");
+            }
+
+            wxMessageDialog dlg(this, message, caption, wxOK | wxCANCEL);
+
             if(dlg.ShowModal() == wxID_OK)
                 for(auto& p : arrayNumberRows)
                     m_grid->DeleteRows(p);
