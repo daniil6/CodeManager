@@ -21,7 +21,7 @@ public:
         : wxScrolledWindow(parent, NewControlId())
     {
         const char* label[] = { "WebSite", "Login", "Password", "" };
-        m_previousTxt = new wxTextCtrl(this, NewControlId(), label[0], wxPoint(-1, -1), wxSize(-1, -1));
+        m_previousTxt = new wxTextCtrl(this, NewControlId(), label[0], wxDefaultPosition, wxDefaultSize, wxBORDER_NONE);
 
         m_mainBox = new wxBoxSizer(wxVERTICAL);
 
@@ -41,7 +41,7 @@ public:
 
     void AddLabel(const char* label)
     {
-        wxTextCtrl* txt = new wxTextCtrl(this, NewControlId(), label, wxPoint(-1, -1), wxSize(-1, -1));
+        wxTextCtrl* txt = new wxTextCtrl(this, NewControlId(), label, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE);
         wxStaticBitmap* btm = new wxStaticBitmap(this, NewControlId(), wxICON(cross), wxPoint(-1, -1), wxSize(10, 10));
 
         wxSizer* prev_box = m_mainBox->GetItem(m_mainBox->GetItemCount() - 1)->GetSizer();

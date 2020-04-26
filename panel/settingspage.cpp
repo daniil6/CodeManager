@@ -10,7 +10,8 @@ CSettingsPage::CSettingsPage(wxWindow* parent)
 {
     this->SetBackgroundColour(*wxWHITE);
 
-    wxTextCtrl* txtNamePage = new wxTextCtrl(this, NewControlId(), wxT(""));
+    wxTextCtrl* txtNamePage =
+        new wxTextCtrl(this, NewControlId(), wxT(""), wxDefaultPosition, wxDefaultSize, wxBORDER_NONE);
 
     wxBoxSizer* main_box = new wxBoxSizer(wxVERTICAL);
 
